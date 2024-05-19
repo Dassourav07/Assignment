@@ -1,3 +1,6 @@
+
+
+import streamlit as st
 from datetime import datetime
 
 class LogQueryInterface:
@@ -15,7 +18,7 @@ class LogQueryInterface:
                         if self._apply_filters(log_data, filters):
                             result_logs.append(log_data)
                     except Exception as e:
-                        print(f"Error parsing log in file {log_file}: {e}")
+                        st.error(f"Error parsing log in file {log_file}: {e}")
                         continue
         return result_logs
     
@@ -33,14 +36,36 @@ class LogQueryInterface:
                 return False
         return True
 
-# Example usage:
-query_interface = LogQueryInterface(['log1.log', 'log2.log', 'log3.log', 'log4.log', 'log5.log', 'log6.log', 'log7.log', 'log8.log'])
+# Initialize LogQueryInterface with log files
+query_interface = LogQueryInterface([
+    'log1.log', 'log2.log', 'log3.log', 'log4.log', 'log5.log', 
+    'log6.log', 'log7.log', 'log8.log'
+])
 
-# Sample query: Find all logs with the level set to "error".
-filters = {"level": 20}
-result_logs = query_interface.search_logs(filters)
-for log in result_logs:
-    print(log)
+# Streamlit app
+st.title('Log Query Interface')
 
+search_query = st.text_input('Enter your search query:')
+level_filter = st.selectbox('Select log level:', ['', 'INFO', 'ERROR', 'DEBUG', 'WARNING'])
+start_date = st.date_input('Start date:')
+end_date = st.date_input('End date:')
+
+if st.button('Search'):
+    filters = {}
+    if search_query:
+        filters['log_string'] = search_query
+    if level_filter:
+        filters['level'] = level_filter
+    if start_date and end_date:
+        filters['timestamp'] = [datetime.combine(start_date, datetime.min.time()), datetime.combine(end_date, datetime.max.time())]
+    
+    result_logs = query_interface.search_logs(filters)
+    
+    if result_logs:
+        st.write('Matching logs:')
+        for log in result_logs:
+            st.json(log)
+    else:
+        st.write('No logs found for the given query.')
 
 
