@@ -1,4 +1,5 @@
 import streamlit as st
+import logging
 from datetime import datetime
 from query_interface import LogQueryInterface
 
