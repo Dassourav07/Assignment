@@ -1,5 +1,3 @@
-
-
 import streamlit as st
 from datetime import datetime
 
@@ -45,27 +43,31 @@ query_interface = LogQueryInterface([
 # Streamlit app
 st.title('Log Query Interface')
 
-search_query = st.text_input('Enter your search query:')
-level_filter = st.selectbox('Select log level:', ['', 'INFO', 'ERROR', 'DEBUG', 'WARNING'])
-start_date = st.date_input('Start date:')
-end_date = st.date_input('End date:')
+# User inputs
+search_query = st.text_input('Enter your search query:')  # Search term for log messages
+level_filter = st.selectbox('Select log level:', ['', 'INFO', 'ERROR', 'DEBUG', 'WARNING'])  # Log level filter
+start_date = st.date_input('Start date:')  # Start date filter
+end_date = st.date_input('End date:')  # End date filter
 
+# Button to trigger search
 if st.button('Search'):
     filters = {}
     if search_query:
-        filters['log_string'] = search_query
+        filters['log_string'] = search_query  # Add log_string filter if provided
     if level_filter:
-        filters['level'] = level_filter
+        filters['level'] = level_filter  # Add log level filter if selected
     if start_date and end_date:
-        filters['timestamp'] = [datetime.combine(start_date, datetime.min.time()), datetime.combine(end_date, datetime.max.time())]
+        filters['timestamp'] = [datetime.combine(start_date, datetime.min.time()), datetime.combine(end_date, datetime.max.time())]  # Add date range filter
     
+    # Search logs based on filters
     result_logs = query_interface.search_logs(filters)
     
     if result_logs:
         st.write('Matching logs:')
         for log in result_logs:
-            st.json(log)
+            st.json(log)  # Display each matching log entry
     else:
         st.write('No logs found for the given query.')
+
 
 
