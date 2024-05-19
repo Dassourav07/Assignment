@@ -5,7 +5,7 @@ from datetime import datetime
 
 class LogIngestor:
     def __init__(self, log_file_path, log_level=logging.INFO):
-        self.logger = logging.getLogger(__name__)
+        self.logger = logging.getLogger(log_file_path)
         self.logger.setLevel(log_level)
         
         formatter = logging.Formatter('%(message)s')
@@ -14,7 +14,6 @@ class LogIngestor:
         file_handler.setFormatter(formatter)
         
         self.logger.addHandler(file_handler)
-
     
     def log_message(self, level, log_string, source):
         timestamp = datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -26,34 +25,17 @@ class LogIngestor:
                 "source": source
             }
         }
-        self.logger.log(level, log_data)
+        self.logger.log(level, json.dumps(log_data))
 
-# Example usage:
-log_ingestor = LogIngestor('log1.log')
-log_ingestor.log_message(logging.INFO, "Inside the Search API", "log1.log")                          
+# Example usage for writing logs into 8 files:
+log_files = ['log1.log', 'log2.log', 'log3.log', 'log4.log', 'log5.log', 'log6.log', 'log7.log', 'log8.log']
+log_messages = [
+    "Inside the Search API", "User authentication successful", "Data processing started", 
+    "Error connecting to database", "Service initialized", "Cache cleared", 
+    "API response sent", "Shutdown signal received"
+]
 
-
-
-log_ingestor = LogIngestor('log2.log')
-log_ingestor.log_message(logging.INFO, "Inside the Search API", "log2.log")    
-
-log_ingestor = LogIngestor('log3.log')
-log_ingestor.log_message(logging.INFO, "Inside the Search API", "log3.log")                          
-
-
-log_ingestor = LogIngestor('log4.log')
-log_ingestor.log_message(logging.INFO, "Inside the Search API", "log4.log")                          
-
-
-log_ingestor = LogIngestor('log5.log')
-log_ingestor.log_message(logging.INFO, "Inside the Search API", "log5.log")                          
-
-log_ingestor = LogIngestor('log6.log')
-log_ingestor.log_message(logging.INFO, "Inside the Search API", "log6.log")                          
-
-log_ingestor = LogIngestor('log7.log')
-log_ingestor.log_message(logging.INFO, "Inside the Search API", "log7.log")                          
-
-
-log_ingestor = LogIngestor('log8.log')
-log_ingestor.log_message(logging.INFO, "Inside the Search API", "log8.log")                          
+for log_file, message in zip(log_files, log_messages):
+    log_ingestor = LogIngestor(log_file)
+    log_ingestor.log_message(logging.INFO, message, log_file)
+                      
