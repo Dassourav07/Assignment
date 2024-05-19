@@ -1,3 +1,5 @@
+
+
 from datetime import datetime
 
 class LogQueryInterface:
@@ -7,19 +9,16 @@ class LogQueryInterface:
     def search_logs(self, filters):
         result_logs = []
         for log_file in self.log_files:
-            try:
-                with open(log_file, 'r') as file:
-                    logs = file.readlines()
-                    for log in logs:
-                        try:
-                            log_data = eval(log)  # Evaluate log string as Python dictionary
-                            if self._apply_filters(log_data, filters):
-                                result_logs.append(log_data)
-                        except Exception as e:
-                            print(f"Error parsing log in file {log_file}: {e}")
-                            continue
-            except FileNotFoundError:
-                print(f"Log file {log_file} not found.")
+            with open(log_file, 'r') as file:
+                logs = file.readlines()
+                for log in logs:
+                    try:
+                        log_data = eval(log)  # Evaluate log string as Python dictionary
+                        if self._apply_filters(log_data, filters):
+                            result_logs.append(log_data)
+                    except Exception as e:
+                        print(f"Error parsing log in file {log_file}: {e}")
+                        continue
         return result_logs
     
     def _apply_filters(self, log_data, filters):
@@ -36,6 +35,13 @@ class LogQueryInterface:
                 return False
         return True
 
+# Example usage:
+query_interface = LogQueryInterface(['log1.log', 'log2.log', 'log3.log', 'log4.log', 'log5.log', 'log6.log', 'log7.log', 'log8.log'])
 
+# Sample query: Find all logs with the level set to "error".
+filters = {"level": 20}
+result_logs = query_interface.search_logs(filters)
+for log in result_logs:
+    print(log)
 
 
