@@ -38,4 +38,6 @@ log_messages = [
 for log_file, message in zip(log_files, log_messages):
     log_ingestor = LogIngestor(log_file)
     log_ingestor.log_message(logging.INFO, message, log_file)
-                      
+
+
+

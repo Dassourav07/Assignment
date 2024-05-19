@@ -24,7 +24,7 @@ if st.button('Search'):
     if search_query:
         filters['log_string'] = search_query
     if level_filter:
-        filters['level'] = getattr(logging, level_filter)
+        filters['level'] = getattr(logging, level_filter, None)
     if start_date and end_date:
         filters['timestamp'] = [datetime.combine(start_date, datetime.min.time()), datetime.combine(end_date, datetime.max.time())]
     
@@ -36,3 +36,4 @@ if st.button('Search'):
             st.json(log)
     else:
         st.write('No logs found for the given query.')
+

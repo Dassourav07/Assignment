@@ -1,5 +1,3 @@
-
-
 from datetime import datetime
 
 class LogQueryInterface:
@@ -43,5 +41,3 @@ filters = {"level": 20}
 result_logs = query_interface.search_logs(filters)
 for log in result_logs:
     print(log)
-
-
